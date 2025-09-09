@@ -7,15 +7,23 @@ import ProductSection from './_components/ProductSection';
 import Category from './_components/Category';
 import AboutUs from './_components/AboutUs';
 import ContactUs from './_components/ContactUs';
+import axiosClient from './_Utils/axiosClient';
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
+    const fetchData = async () => {
+      try {
+        await axiosClient.get('/products?pagination[limit]=1');
+        setLoading(false);
+      } catch (error) {
+        console.error('❌ Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   if (loading) {
@@ -38,7 +46,7 @@ export default function Home() {
   return (
     <div>
       <Hero />
-      <Category/>
+      <Category />
       <ProductSection />
       <AboutUs />
       <ContactUs />
